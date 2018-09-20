@@ -4,17 +4,18 @@
 #
 Name     : watchdogd
 Version  : 3.1
-Release  : 1
+Release  : 2
 URL      : https://github.com/troglobit/watchdogd/releases/download/3.1/watchdogd-3.1.tar.xz
 Source0  : https://github.com/troglobit/watchdogd/releases/download/3.1/watchdogd-3.1.tar.xz
 Summary  : Watchdog daemon with process supervisor/instrumentation API
 Group    : Development/Tools
 License  : ISC
 Requires: watchdogd-bin
+Requires: watchdogd-config
 Requires: watchdogd-lib
+Requires: watchdogd-data
 Requires: watchdogd-license
 Requires: watchdogd-man
-Requires: watchdogd-config
 BuildRequires : pkgconfig(libconfuse)
 BuildRequires : pkgconfig(libite)
 BuildRequires : pkgconfig(libuev)
@@ -29,6 +30,7 @@ System & Process Supervisor for Linux
 %package bin
 Summary: bin components for the watchdogd package.
 Group: Binaries
+Requires: watchdogd-data = %{version}-%{release}
 Requires: watchdogd-config = %{version}-%{release}
 Requires: watchdogd-license = %{version}-%{release}
 Requires: watchdogd-man = %{version}-%{release}
@@ -45,11 +47,20 @@ Group: Default
 config components for the watchdogd package.
 
 
+%package data
+Summary: data components for the watchdogd package.
+Group: Data
+
+%description data
+data components for the watchdogd package.
+
+
 %package dev
 Summary: dev components for the watchdogd package.
 Group: Development
 Requires: watchdogd-lib = %{version}-%{release}
 Requires: watchdogd-bin = %{version}-%{release}
+Requires: watchdogd-data = %{version}-%{release}
 Provides: watchdogd-devel = %{version}-%{release}
 
 %description dev
@@ -68,6 +79,7 @@ doc components for the watchdogd package.
 %package lib
 Summary: lib components for the watchdogd package.
 Group: Libraries
+Requires: watchdogd-data = %{version}-%{release}
 Requires: watchdogd-license = %{version}-%{release}
 
 %description lib
@@ -98,7 +110,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1537475893
+export SOURCE_DATE_EPOCH=1537476536
 %configure --disable-static
 make  %{?_smp_mflags}
 
@@ -110,11 +122,14 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1537475893
+export SOURCE_DATE_EPOCH=1537476536
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/doc/watchdogd
 cp LICENSE %{buildroot}/usr/share/doc/watchdogd/LICENSE
 %make_install
+## install_append content
+install -D -m 00644 watchdogd.conf %{buildroot}/usr/share/defaults/watchdogd/watchdogd.conf
+## install_append end
 
 %files
 %defattr(-,root,root,-)
@@ -127,6 +142,10 @@ cp LICENSE %{buildroot}/usr/share/doc/watchdogd/LICENSE
 %files config
 %defattr(-,root,root,-)
 /usr/lib/systemd/system/watchdogd.service
+
+%files data
+%defattr(-,root,root,-)
+/usr/share/defaults/watchdogd/watchdogd.conf
 
 %files dev
 %defattr(-,root,root,-)
