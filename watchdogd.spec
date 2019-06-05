@@ -4,7 +4,7 @@
 #
 Name     : watchdogd
 Version  : 3.1
-Release  : 2
+Release  : 3
 URL      : https://github.com/troglobit/watchdogd/releases/download/3.1/watchdogd-3.1.tar.xz
 Source0  : https://github.com/troglobit/watchdogd/releases/download/3.1/watchdogd-3.1.tar.xz
 Summary  : Watchdog daemon with process supervisor/instrumentation API
